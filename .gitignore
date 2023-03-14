@@ -1,0 +1,33 @@
+# IDEs
+.idea
+.vscode
+
+# virtualsenvs
+.venv
+venv
+
+# Caches
+__pycache__
+.coverage
+.coverage.*
+.hypothesis/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OSes
+.DS_Store
+Thumbs.db
+.directory
+
+# Configs
+.env
+.python-version
+poetry.lock
+
+# Package
+dist
+
+# Testing
+my_app
+htmlcov

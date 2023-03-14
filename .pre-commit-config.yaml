@@ -1,0 +1,42 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: check-ast
+      - id: debug-statements
+      - id: check-yaml
+      - id: check-toml
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-case-conflict
+      - id: check-added-large-files
+      - id: check-symlinks
+      - id: name-tests-test
+        args: [ --pytest-test-first ]
+      - id: detect-private-key
+      - id: check-merge-conflict
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: poetry run mypy
+        language: system
+        types: [python]
+        require_serial: true
+      - id: black
+        name: black
+        entry: poetry run black
+        language: system
+        types: [python]
+      - id: ruff
+        name: ruff
+        entry: poetry run ruff
+        language: system
+        types: [python]
+      - id: pytest
+        name: pytest
+        entry: poetry run pytest
+        language: system
+        types: [python]

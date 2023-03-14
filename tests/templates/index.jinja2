@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello FastAPI-HTMX</title>
+</head>
+<body>
+    <h1>{{ greeting }}</h1>
+    <button
+        hx-get="/customers"
+        hx-push-url="true"
+        hx-swap="innerHTML"
+        hx-target="#customers_list"
+    >
+        Load Data
+    </button>
+    <div id="customers_list">
+        {% include 'customers.jinja2' %}
+    </div>
+    <script src="https://unpkg.com/htmx.org@1.8.6"></script>
+</body>
+</html>
