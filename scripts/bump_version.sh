@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 new_version="$1"
 description="$2"
 if [ -z "$new_version" ]; then

@@ -2,7 +2,7 @@
 
 Extension for FastAPI to make HTMX easier to use.
 
-FastAPI-HTMX is opinionated to speed up development lightly interactive web applications. FastAPI-HTMX is implemented as a decorator, so it can be used on endpoints selectively. Furthermore it reduces boilerplate for Jinja2 template handling and allows for rapid prototyping by providing convenient helpers.
+FastAPI-HTMX is an opinionated extension for FastAPI to speed up development of lightly interactive web applications. FastAPI-HTMX is implemented as a decorator, so it can be used on endpoints selectively. Furthermore it reduces boilerplate for Jinja2 template handling and allows for rapid prototyping by providing convenient helpers.
 
 
 ## Install
@@ -50,12 +50,12 @@ async def get_customers(request: Request):
 Note that:
 - `htmx()` got parameters, specifying the Jinja2 template to use
 - `htmx_init()` is needed for FastAPI-HTMX to find the templates
-- **There is no direct interaction with the template, instead the template is specified and the needed variables are passed on to the decorator by returning them**. Endpoints can be designed similar to standard REST endpoints in FastAPI this way.
-    - This simplifies modularizing the app (see below) and also providing a REST API if needed. See the "Usage" section for further examples.
-    - `get_customers` does not respond with the whole web page, but only with a part of it. See the [HTMX documentation](https://htmx.org/docs/#introduction) on how it merges partials into the current web page.
+- **There is no direct handling of the template needed, it only needs to be specified and the needed variables need to be returned**. This way endpoints can be designed in a familiar way to standard REST endpoints in FastAPI.
+    - This simplifies modularizing the app later (see below) and also providing a REST API if needed. See the "Usage" section for further examples.
+    - `get_customers` does not respond with the whole web page, but only with a part of it. See the [HTMX documentation](https://htmx.org/docs/#introduction) on how HTMX merges partials into the current web page.
 - **`request: Request` although not used in the endpoint directly, it is currently required for the decorator to work!**
 
-The above example also needs these very basic [Jinja2 templates](https://jinja.palletsprojects.com/en/3.1.x/templates/) in `my_app/templates/` to work.
+The [Jinja2 templates](https://jinja.palletsprojects.com/en/3.1.x/templates/) to go along with the above code need to be placed like specified in `htmx_init` in `my_app/templates/` in order for the example to work.
 
 The root page `my_app/templates/index.jinja2`:
 ```jinja2
@@ -79,7 +79,7 @@ The root page `my_app/templates/index.jinja2`:
 </html>
 ```
 
-The [partial template to load with htmx](https://htmx.org/docs/#introduction) `my_app/templates/customers.jinja2`:
+The [partial template to load with HTMX](https://htmx.org/docs/#introduction) `my_app/templates/customers.jinja2`:
 ```jinja2
 <ul>
     {% for customer in customers %}
@@ -194,7 +194,7 @@ To add additional partials and endpoints just repeat the same logic:
 - Include the partial in the parent Jinja2 template, like the main template. A hierarchy is possible as well.
 - Refactor the partials endpoints logic into a function
     - Add it's return value to the parents constructor function like done above in `construct_root_page`
-    - Add the parents template and constructor function to the partials endpoints htmx decorator arguments
+    - Add the parents template and constructor function to the partials endpoints `htmx` decorator arguments
 
 
 ### Advanced Usage
