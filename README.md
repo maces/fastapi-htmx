@@ -2,7 +2,8 @@
 
 Extension for FastAPI to make HTMX easier to use.
 
-FastAPI-HTMX is implemented as a decorator, so it can be used selectively on routes in you FastAPI project. Furthermore it reduces boilerplate and allows for rapid prototyping by providing convenient helpers.
+FastAPI-HTMX is opinionated to speed up development lightly interactive web applications. FastAPI-HTMX is implemented as a decorator, so it can be used on endpoints selectively. Furthermore it reduces boilerplate for Jinja2 template handling and allows for rapid prototyping by providing convenient helpers.
+
 
 ## Install
 
@@ -15,6 +16,7 @@ install via `poetry`:
 ```
 $ poetry add fastapi-htmx
 ```
+
 
 ## Usage
 
@@ -46,11 +48,12 @@ async def get_customers(request: Request):
 ```
 
 Note that:
-- `htmx()` got a parameter, which is the Jinja2 template to use
-- `htmx_init()` is needed for FastAPI-HTMX to find the templates and more
-- **There is no direct usage of a template, instead the template is specified and the needed variables are passed on by returning them**. Similar to a standard REST endpoint.
-    - This simplifies switching between templates and REST endpoints. See the "Usage" section for further examples.
-- **`request: Request` although not used, it is currently required for the decorator to work!**
+- `htmx()` got parameters, specifying the Jinja2 template to use
+- `htmx_init()` is needed for FastAPI-HTMX to find the templates
+- **There is no direct interaction with the template, instead the template is specified and the needed variables are passed on to the decorator by returning them**. Endpoints can be designed similar to standard REST endpoints in FastAPI this way.
+    - This simplifies modularizing the app (see below) and also providing a REST API if needed. See the "Usage" section for further examples.
+    - `get_customers` does not respond with the whole web page, but only with a part of it. See the [HTMX documentation](https://htmx.org/docs/#introduction) on how it merges partials into the current web page.
+- **`request: Request` although not used in the endpoint directly, it is currently required for the decorator to work!**
 
 The above example also needs these very basic [Jinja2 templates](https://jinja.palletsprojects.com/en/3.1.x/templates/) in `my_app/templates/` to work.
 
@@ -71,7 +74,7 @@ The root page `my_app/templates/index.jinja2`:
         Load Data
     </button>
     <div id="customers_list"></div>
-    <script src="https://unpkg.com/htmx.org@1.8.6"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.5"></script>
 </body>
 </html>
 ```
@@ -85,6 +88,7 @@ The [partial template to load with htmx](https://htmx.org/docs/#introduction) `m
 </ul>
 ```
 
+
 ### Main Concept
 
 The decorator `htmx` provides the following helpers:
@@ -93,9 +97,16 @@ The decorator `htmx` provides the following helpers:
 - `full_template_name` The full page template to use when URL rewriting + history is used
 - `*_template_constructor` For DRY code, in case the logic to gather all needed variables is needed multiple times
 
-Seeing these arguments one might ask themselves: Why use a full template or functions to provide the variables for the templates if there is an endpoint anyway?
+Seeing these arguments one might ask themselves: Why all these parameters? The answer is an opinionated take on how to design modular endpoints wit partials and url-rewriting support:
 
-The idea behind FastAPI-HTMX is to maintain a modular structure in the app and with the endpoints. Similar to a REST API with a [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA). This way the frontend can be modular as well. This majorly helps with supporting [URL rewriting and the history](https://htmx.org/docs/#history) in the frontend. A simple endpoint just answers with the partial. If the URL is rewritten and a user navigates back, reloads the page or copies the URL and opens it in another tab or shares it, only the partial would be shown in the browser. **To enable this SPA like functionality FastAPI-HTMX provides these arguments for the decorator and requires to return a dict of the needed variables**. In order to support this in an app, see the following example:
+The idea behind FastAPI-HTMX is to maintain a modular structure in the app and with the endpoints. Similar to a REST API with a [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA). This way the frontend can be modular as well. This majorly helps with supporting [URL rewriting and the history](https://htmx.org/docs/#history) in the frontend:
+
+- A simple endpoint just answers with the partial.
+- Without it, if the URL is rewritten and a user navigates back, reloads the page or copies the URL and opens it in another tab or shares the URL, only the partial would be shown in the browser.
+
+**To enable SPA like functionality FastAPI-HTMX uses the concept of partials and fullpages as arguments for the decorator and requires to return a dict of the needed variables**.
+
+In order to support this in an app, see the following example:
 
 `my_app/api_with_constructors.py`:
 ```python
@@ -130,15 +141,15 @@ async def get_customers(request: Request):
 ```
 
 Note that:
-- The `construct_*` functions where added, they now return the data
-    - **`construct_root_page` gathers all variables specified needed for the root page, including partials**
-        - **This also means you must avoid naming conflicts across endpoints.**
+- The `construct_*` functions are added, they now return the data
+    - **`construct_root_page` gathers all variables specified needed for the root page, including those for partials**
+        - **This also means you must avoid naming conflicts across endpoints, so dicts can be merged.**
         - Costly operations can still be ignored, just use if statements in the template or similar
-- The decorators arguments where extended
-    - The second argument is the template to use when the rewritten URL is used directly (new tab, navigation or reload)
-        - **Since `construct_root_page` gathers all the data for the whole page, the whole page can be returned to the client**
+- The decorators arguments are extended
+    - The second argument is the fullpage template which is used when the endpoint is called directly (new tab, navigation or reload)
+        - **E.g. since `construct_root_page` gathers all the data for the whole page, the whole page can be returned to the client**
     - The other arguments are just to save some boilerplate code handling the [`HX-Request` header](https://htmx.org/attributes/hx-push-url/)
-        - **There is no need to use these arguments of the decorator, they are just for convenience.** If needed the endpoint can be used for the logic as well. Especially if no URL rewriting is needed.
+        - **There is no need to use the arguments for the constructor functions, they are just for convenience.** If needed the endpoint can be used for the logic as well. Especially if no URL rewriting is needed.
 
 For the above code to work the `my_app/templates/index.jinja2` needs to be changed as well. The changes are in the button and target div.
 Changed root page `my_app/templates/index.jinja2`:
@@ -179,15 +190,23 @@ The unchanged partial `my_app/templates/customers.jinja2`:
 </ul>
 ```
 
-Additional partials and their endpoints can be added by the same logic:
+To add additional partials and endpoints just repeat the same logic:
 - Include the partial in the parent Jinja2 template, like the main template. A hierarchy is possible as well.
 - Refactor the partials endpoints logic into a function
-    - Add it's return vale to the parents constructor function like above
+    - Add it's return value to the parents constructor function like done above in `construct_root_page`
     - Add the parents template and constructor function to the partials endpoints htmx decorator arguments
+
 
 ### Advanced Usage
 
-Add [custom filters](https://jinja.palletsprojects.com/en/3.1.x/api/#custom-filters) to Jinja2 templates:
+In order to use [custom Jinja2 filters](https://jinja.palletsprojects.com/en/3.1.x/api/#custom-filters) like the following, configure them like below.
+
+
+```Jinja2
+<p>{{ customer.created|datetime_format }}</p>
+```
+
+Add custom filters for use in Jinja2 templates:
 ```python
 # ...
 def datetime_format(value: datetime, format="%H:%M %d.%m.%Y"):

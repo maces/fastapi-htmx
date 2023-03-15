@@ -10,7 +10,7 @@ from fastapi.templating import Jinja2Templates
 templates_path: Jinja2Templates | None = None
 
 
-class FullPageTemplateMissingError(Exception):
+class MissingFullPageTemplateError(Exception):
     """Fullpage request not a corresponding template configured for url rewriting and history to work."""
 
     pass
@@ -75,7 +75,7 @@ def htmx(  # noqa: C901
             template_name = partial_template_name
             if request_is_fullpage_request:
                 if full_template_name is None:
-                    raise FullPageTemplateMissingError()
+                    raise MissingFullPageTemplateError()
                 template_name = full_template_name
 
             if templates_path is None:
