@@ -31,7 +31,10 @@ classifiers = [
     "Typing :: Typed"
 ]
 
-packages = [{include = "fastapi_htmx"}]
+packages = [
+    {include = "fastapi_htmx"},
+    {include = "fastapi_htmx/py.typed"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
