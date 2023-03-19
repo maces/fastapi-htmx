@@ -199,8 +199,22 @@ To add additional partials and endpoints just repeat the same logic:
 
 ### Advanced Usage
 
-In order to use [custom Jinja2 filters](https://jinja.palletsprojects.com/en/3.1.x/api/#custom-filters) like the following, configure them like below.
+In case the `htmx()` arguments for partial and fullpage callables are not flexible enough, an endpoint can be used like usual. For a bit more convenience the `HX-Request` header is easily accessible via `request.hx_request`:
 
+```python
+from fastapi_htmx import HXRequest, htmx, htmx_init
+
+@htmx("email_detail", "index")
+def get_email(request: HXRequest, email_id: int):
+    if request.hx_request:
+        return my_partial()
+    else:
+        return fullpage()
+```
+
+#### Filters
+
+In order to use [custom Jinja2 filters](https://jinja.palletsprojects.com/en/3.1.x/api/#custom-filters) like the following, configure them like below.
 
 ```Jinja2
 <p>{{ customer.created|datetime_format }}</p>

@@ -22,6 +22,12 @@ class MissingHTMXInitError(Exception):
     pass
 
 
+class HXRequest(Request):
+    """FastAPI Request Object with HTMX additions."""
+
+    hx_request: bool = False
+
+
 def htmx(  # noqa: C901
     partial_template_name: str,
     full_template_name: str | None = None,
@@ -48,10 +54,12 @@ def htmx(  # noqa: C901
         Callable: The decorated function.
     """  # noqa: D401
 
-    def htmx_decorator(func):
+    def htmx_decorator(func):  # noqa: C901
         @wraps(func)
-        async def wrapper(*args, request: Request, **kwargs) -> Callable:
+        async def wrapper(*args, request: Request, **kwargs) -> Callable:  # noqa: C901
             request_is_fullpage_request = _is_fullpage_request(request=request)
+            # hint: use `HXRequest` instead of `Request` for typing when using `request.hx_request`
+            request.hx_request = not request_is_fullpage_request  # type: ignore
 
             # convenient history support if kwargs match in the endpoint and constructor
             if request_is_fullpage_request and full_template_constructor is not None:
@@ -65,12 +73,19 @@ def htmx(  # noqa: C901
                 else:
                     response = partial_template_constructor(**kwargs)
             else:
-                response = await func(*args, request=request, **kwargs)
+                if inspect.iscoroutinefunction(func):
+                    response = await func(*args, request=request, **kwargs)
+                else:
+                    response = func(*args, request=request, **kwargs)
 
             # in case no constructor function or return dict was supplied, assume a template not needing variables
             if response is None:
                 logging.debug("No data provided for endpoit, providing empty dict.")
                 response = {}
+
+            # in case of RedirectResponse or similar
+            if not isinstance(response, dict):
+                return response
 
             template_name = partial_template_name
             if request_is_fullpage_request:
