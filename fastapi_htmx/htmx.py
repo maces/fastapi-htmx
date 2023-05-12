@@ -3,6 +3,7 @@ import inspect
 import logging
 from collections.abc import Callable
 from functools import wraps
+from typing import Mapping
 
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
@@ -84,7 +85,7 @@ def htmx(  # noqa: C901
                 response = {}
 
             # in case of RedirectResponse or similar
-            if not isinstance(response, dict):
+            if not isinstance(response, Mapping):
                 return response
 
             template_name = partial_template_name
