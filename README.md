@@ -74,7 +74,7 @@ The root page `my_app/templates/index.jinja2`:
         Load Data
     </button>
     <div id="customers_list"></div>
-    <script src="https://unpkg.com/htmx.org@1.8.5"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
 </body>
 </html>
 ```
@@ -172,7 +172,7 @@ Changed root page `my_app/templates/index.jinja2`:
     <div id="customers_list">
         {% include 'customers.jinja2' %}
     </div>
-    <script src="https://unpkg.com/htmx.org@1.8.6"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
 </body>
 </html>
 ```
