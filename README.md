@@ -4,6 +4,7 @@ Extension for FastAPI to make HTMX easier to use.
 
 FastAPI-HTMX is an opinionated extension for FastAPI to speed up development of lightly interactive web applications. FastAPI-HTMX is implemented as a decorator, so it can be used on endpoints selectively. Furthermore it reduces boilerplate for Jinja2 template handling and allows for rapid prototyping by providing convenient helpers.
 
+[![Tests](https://github.com/maces/fastapi-htmx/actions/workflows/github-actions-tests.yml/badge.svg)](https://github.com/maces/fastapi-htmx/actions/workflows/github-actions-tests.yml)
 
 ## Install
 
