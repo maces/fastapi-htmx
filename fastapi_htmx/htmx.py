@@ -1,9 +1,8 @@
 """Extension for FastAPI to make HTMX easier to use."""
 import inspect
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from functools import wraps
-from typing import Mapping
 
 from fastapi import Request
 from fastapi.templating import Jinja2Templates

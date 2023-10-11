@@ -1,0 +1,37 @@
+name: Tests
+on: [ pull_request ]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.11.6
+      - name: Install poetry
+        run: python -m pip install poetry==1.6.1
+      - name: install test dependencies
+        run: poetry install
+      - uses: pre-commit/action@v3.0.0
+  run-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ 3.8, 3.9, 3.10.13, 3.11, 3.12 ]
+        fastapi-version: [ 0.94, 0.103 ]
+        jinja2-version: [ 3.1.2 ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install poetry
+        run: python -m pip install poetry==1.6.1
+      - name: install test dependencies
+        run: poetry install --only dev
+      - name: install main dependencies from matrix
+        run: poetry add fastapi==${{ matrix.fastapi-version }} jinja2==${{ matrix.jinja2-version }}
+      - name: run tests
+        run: poetry run pytest -v --cov-report term --cov=fastapi_htmx

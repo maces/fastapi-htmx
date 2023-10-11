@@ -41,3 +41,10 @@ def test_async_partial_constructors():
     assert "<h1>Hello World</h1>" in response.text
     assert "<li>John Doe</li>" in response.text
     assert "<li>Jane Doe</li>" in response.text
+
+    # check if a partial does not include the root page
+    response = client.get("/customers", headers={"HX-Request": "true"})
+    assert response.status_code == 200
+    assert "<h1>Hello World</h1>" not in response.text
+    assert "<li>John Doe</li>" in response.text
+    assert "<li>Jane Doe</li>" in response.text
