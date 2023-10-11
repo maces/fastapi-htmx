@@ -35,8 +35,3 @@ repos:
         entry: poetry run ruff
         language: system
         types: [python]
-      - id: pytest
-        name: pytest
-        entry: poetry run pytest
-        language: system
-        types: [python]
