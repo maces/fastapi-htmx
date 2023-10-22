@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi-htmx"
-version = "0.2.2"
+version = "0.2.3"
 description = "Extension for FastAPI to make HTMX easier to use."
 authors = ["maces <fastapi-htmx@mzip.de>"]
 license = "LGPL"
@@ -38,7 +38,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = ">=0.94,^0.103"
+fastapi = ">=0.94,^0.104"
 jinja2 = "^3.1"
 
 [tool.poetry.group.dev.dependencies]
