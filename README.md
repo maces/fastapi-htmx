@@ -5,6 +5,8 @@ Extension for FastAPI to make HTMX easier to use.
 FastAPI-HTMX is an opinionated extension for FastAPI to speed up development of lightly interactive web applications. FastAPI-HTMX is implemented as a decorator, so it can be used on endpoints selectively. Furthermore it reduces boilerplate for Jinja2 template handling and allows for rapid prototyping by providing convenient helpers.
 
 [![Tests](https://github.com/maces/fastapi-htmx/actions/workflows/github-actions-tests.yml/badge.svg)](https://github.com/maces/fastapi-htmx/actions/workflows/github-actions-tests.yml)
+[![Version](https://img.shields.io/pypi/v/fastapi-htmx?logo=pypi&logoColor=white)](https://pypi.org/project/fastapi-htmx/)
+
 
 ## Install
 
@@ -105,9 +107,9 @@ The idea behind FastAPI-HTMX is to maintain a modular structure in the app and w
 - A simple endpoint just answers with the partial.
 - Without it, if the URL is rewritten and a user navigates back, reloads the page or copies the URL and opens it in another tab or shares the URL, only the partial would be shown in the browser.
 
-**To enable SPA like functionality FastAPI-HTMX uses the concept of partials and fullpages as arguments for the decorator and requires to return a dict of the needed variables**.
+**To enable SPA like functionality FastAPI-HTMX uses the concept of partials and fullpages as arguments for the decorator and requires to return a dict of the needed variables**. Note that returning anything else than a `Mapping` like a dict in the route, leads FastAPI-HTMX to return that instead of a template.
 
-In order to support this in an app, see the following example:
+In order to support this SPA like functionality in an app, see the following example:
 
 `my_app/api_with_constructors.py`:
 ```python
