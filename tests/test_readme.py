@@ -2,6 +2,7 @@ import re
 import shutil
 import textwrap
 from pathlib import Path
+from typing import Dict
 
 import pytest
 from fastapi.testclient import TestClient
@@ -9,9 +10,9 @@ from fastapi.testclient import TestClient
 file_name_in_markdown_pattern = re.compile("`([a-zA-Z0-9/_.]*)`")
 
 
-def extract_test_cases_from_readme() -> dict[str, dict[str, str]]:
+def extract_test_cases_from_readme() -> Dict[str, Dict[str, str]]:
     print(Path(".").absolute())
-    test_cases: dict[str, dict[str, str]] = {}
+    test_cases: Dict[str, Dict[str, str]] = {}
     with open(Path("README.md")) as readme_file:
         readme = textwrap.dedent(readme_file.read())
         file_name = ""
@@ -47,7 +48,7 @@ def extract_test_cases_from_readme() -> dict[str, dict[str, str]]:
     return test_cases
 
 
-def create_test_files(test_case: dict[str, str]):
+def create_test_files(test_case: Dict[str, str]):
     shutil.rmtree("my_app", ignore_errors=True)  # cleanup
     for file_path, file_content in test_case.items():
         Path(file_path).parent.mkdir(parents=True, exist_ok=True)
