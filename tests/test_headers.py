@@ -22,4 +22,4 @@ class MockRequest:  # noqa: D101
 def test_is_fullpage_request(headers: dict, result: bool):
     request = MockRequest(headers=headers)
 
-    assert _is_fullpage_request(request) == result  # Type: ignore
+    assert _is_fullpage_request(request) == result  # type: ignore
