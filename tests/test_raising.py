@@ -39,8 +39,8 @@ def test_missing_fullpage_template():
 
     client = TestClient(app)
 
-    with pytest.raises(MissingFullPageTemplateError):
-        client.get("/")
+    response = client.get("/")
+    assert response.status_code == 400
 
 
 def test_missing_init():
