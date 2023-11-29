@@ -5,7 +5,7 @@ from collections.abc import Callable, Mapping
 from functools import wraps
 from typing import Optional
 
-from fastapi import Request, HTTPException
+from fastapi import HTTPException, Request
 from fastapi.templating import Jinja2Templates
 
 templates_path: Optional[Jinja2Templates] = None
