@@ -10,7 +10,7 @@ jobs:
         with:
           python-version: 3.11.6
       - name: Install poetry
-        run: python -m pip install poetry==1.6.1
+        run: python -m pip install poetry==1.7.1
       - name: install test dependencies
         run: poetry install
       - uses: pre-commit/action@v3.0.0
@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [ 3.8, 3.9, 3.10.13, 3.11, 3.12 ]
-        fastapi-version: [ 0.94, 0.103, 0.104 ]
+        fastapi-version: [ 0.94, 0.107, 0.108 ]
         jinja2-version: [ 3.1.2 ]
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install poetry
-        run: python -m pip install poetry==1.6.1
+        run: python -m pip install poetry==1.7.1
       - name: install test dependencies
         run: poetry install --only dev
       - name: install main dependencies from matrix
