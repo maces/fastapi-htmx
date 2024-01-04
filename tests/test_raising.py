@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.testclient import TestClient
 
 from fastapi_htmx import htmx, htmx_init
-from fastapi_htmx.htmx import MissingFullPageTemplateError, MissingHTMXInitError
+from fastapi_htmx.htmx import MissingHTMXInitError
 
 
 def test_missing_request():
@@ -39,8 +39,8 @@ def test_missing_fullpage_template():
 
     client = TestClient(app)
 
-    with pytest.raises(MissingFullPageTemplateError):
-        client.get("/")
+    response = client.get("/")
+    assert response.status_code == 400
 
 
 def test_missing_init():

@@ -5,16 +5,20 @@ from collections.abc import Callable, Mapping
 from functools import wraps
 from typing import Optional
 
-from fastapi import Request
+from fastapi import HTTPException, Request
 from fastapi.templating import Jinja2Templates
 
 templates_path: Optional[Jinja2Templates] = None
 
 
-class MissingFullPageTemplateError(Exception):
+class MissingFullPageTemplateError(HTTPException):
     """Fullpage request not a corresponding template configured for url rewriting and history to work."""
 
-    pass
+    def __init__(self) -> None:  # noqa: D107
+        super().__init__(status_code=400, detail="Ressource cannot be accessed directly.")
+        logging.debug(
+            "Route is not configured to be queried directly. Please specify a fullpage template + data for that."
+        )
 
 
 class MissingHTMXInitError(Exception):
