@@ -61,8 +61,8 @@ class HXRequest(Request):
     hx_request: bool = False
 
 
-def _get_template_name(name: str, file_extension: str) -> TemplateFileInfo:
-    if isinstance(name, TemplateSpec):
+def _get_template_name(name: Union[TemplateSpec, str], file_extension: Optional[str]) -> TemplateFileInfo:
+    if isinstance(name, TemplateSpec) and isinstance(templates_path, dict):
         try:
             templates_collection_path = templates_path[name.collection_name]
             template_name_in_collection = name.template_name
@@ -72,8 +72,8 @@ def _get_template_name(name: str, file_extension: str) -> TemplateFileInfo:
                 "Please specify all collections of templates used in the decorators"
             )
     else:
-        templates_collection_path = templates_path
-        template_name_in_collection = name
+        templates_collection_path = templates_path  # type: ignore
+        template_name_in_collection = name  # type: ignore
 
     if file_extension is None:
         file_extension = templates_file_extension
