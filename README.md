@@ -284,7 +284,7 @@ htmx_init(templates=templates)
 
 #### Multiple Template Directories
 
-For bigger apps, multiple template directories might be needed. For example if the app split into several modules each for a distinct part of the app and connected with routers. For this case template collections can be used. During `htmx_init()` multiple template collections can be defined. In each endpoint instead of the templates name (`account`) the collection gets specified as well, like this: `Tpl(SHOP, "account")`. This works for partials and full pages.
+For bigger apps, multiple template directories might be needed. For example if the app is split into several modules connected with routers. For this case template collections can be used. With `htmx_init()` multiple template collections can be defined. In each endpoint instead of the templates name (`account`) the collection gets specified as well, like this: `Tpl(SHOP, "account")`. This works for partials and full pages.
 
 `my_app/api_multiple_template_paths.py`:
 ```python
