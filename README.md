@@ -203,30 +203,75 @@ To add additional partials and endpoints just repeat the same logic:
 
 ### Advanced Usage
 
+
+#### Handling `HX-Request` manually
+
 In case the `htmx()` arguments for partial and fullpage callables are not flexible enough, an endpoint can be used like usual. For a bit more convenience the `HX-Request` header is easily accessible via `request.hx_request`:
 
+`my_app/api_with_hx_request.py`:
 ```python
+from pathlib import Path
+
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from fastapi_htmx import HXRequest, htmx, htmx_init
 
+app = FastAPI()
+htmx_init(templates=Jinja2Templates(directory=Path("my_app") / "templates"))
+
+def my_partial(email_id: int = None):
+    return {"email_id": email_id}
+
+def fullpage(email_id: int = None):
+    return {**my_partial(email_id)}
+
+@app.get("/email/{email_id}", response_class=HTMLResponse)
 @htmx("email_detail", "index")
 def get_email(request: HXRequest, email_id: int):
     if request.hx_request:
-        return my_partial()
+        return my_partial(email_id)
     else:
-        return fullpage()
+        return fullpage(email_id)
 ```
+
+`my_app/templates/index.jinja2`:
+```jinja2
+<!DOCTYPE html>
+<html><head><title>Hello FastAPI-HTMX</title></head>
+<body>
+    <div id="email_detail">
+        {% include 'email_detail.jinja2' %}
+    </div>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+</body>
+</html>
+```
+
+`my_app/templates/email_detail.jinja2`:
+```jinja2
+<p>{{ email_id }}</p>
+```
+
 
 #### Filters
 
 In order to use [custom Jinja2 filters](https://jinja.palletsprojects.com/en/3.1.x/api/#custom-filters) like the following, configure them like below.
 
+`my_app/templates/customer.jinja2`:
 ```Jinja2
 <p>{{ customer.created|datetime_format }}</p>
 ```
 
 Add custom filters for use in Jinja2 templates:
+`my_app/api_template_filters.py`:
 ```python
-# ...
+from pathlib import Path
+from datetime import datetime
+
+from fastapi.templating import Jinja2Templates
+from fastapi_htmx import htmx_init
+
 def datetime_format(value: datetime, format="%H:%M %d.%m.%Y"):
     return value.strftime(format) if value is not None else ""
 
@@ -234,4 +279,108 @@ templates = Jinja2Templates(directory=Path("my_app") / "templates")
 templates.env.filters["datetime_format"] = datetime_format
 htmx_init(templates=templates)
 # ...
+```
+
+
+#### Multiple Template Directories
+
+For bigger apps, multiple template directories might be needed. For example if the app is split into several modules connected with routers. For this case template collections can be used. With `htmx_init()` multiple template collections can be defined. In each endpoint instead of the templates name (`account`) the collection gets specified as well, like this: `Tpl(SHOP, "account")`. This works for partials and full pages.
+
+`my_app/api_multiple_template_paths.py`:
+```python
+from pathlib import Path
+
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi_htmx import htmx, htmx_init, TemplateSpec as Tpl
+
+SHOP = "shop"
+BACKEND = "backend"
+
+app = FastAPI()
+templates = {
+    SHOP: Jinja2Templates(directory=Path("my_app") / SHOP / "templates"),
+    BACKEND: Jinja2Templates(directory=Path("my_app") / BACKEND / "templates")
+}
+htmx_init(templates=templates)
+
+@app.get("/account", response_class=HTMLResponse)
+@htmx(Tpl(SHOP, "account"))
+async def get_account(request: Request):
+    pass
+
+@app.get("/products", response_class=HTMLResponse)
+@htmx(Tpl(BACKEND, "products"))
+async def get_products(request: Request):
+    pass
+
+```
+
+`my_app/shop/templates/account.jinja2`:
+```jinja2
+<h1>My Account</h1>
+```
+
+`my_app/backend/templates/products.jinja2`:
+```jinja2
+<h1>Products</h1>
+```
+
+
+#### Other template file extensions for SOME endpoints
+
+In case SOME endpoints templates got another file extension than the rest, it can be specified in the `@htmx()` decorator:
+
+`my_app/api_template_file_extension.py`:
+```python
+from pathlib import Path
+
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi_htmx import htmx, htmx_init
+
+app = FastAPI()
+htmx_init(templates=Jinja2Templates(directory=Path("my_app") / "templates"))
+
+@app.get("/customers", response_class=HTMLResponse)
+@htmx("customers", template_extension="html")
+async def get_customers(request: Request):
+    pass
+# ...
+```
+
+`my_app/templates/customers.html`:
+```jinja2
+<h1>Customer</h1>
+```
+
+
+#### Other template file extensions for ALL endpoints
+
+In case ALL endpoints templates got another file extension than the default `jinja2`, it can be overriden in `htmx_init()` like this:
+
+`my_app/api_template_file_extension.py`:
+```python
+from pathlib import Path
+
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi_htmx import htmx, htmx_init
+
+app = FastAPI()
+templates = Jinja2Templates(directory=Path("my_app") / "templates")
+htmx_init(templates=templates, file_extension="html")
+
+@app.get("/customers", response_class=HTMLResponse)
+@htmx("customers")
+async def get_customers(request: Request):
+    pass
+```
+
+`my_app/templates/customers.html`:
+```jinja2
+<h1>Customer</h1>
 ```

@@ -95,3 +95,64 @@ def test_main_concept():
     assert "<h1>Hello World</h1>" in response.text
     assert "<li>John Doe</li>" in response.text
     assert "<li>Jane Doe</li>" in response.text
+
+
+@pytest.mark.parametrize("headers", [{"HX-Request": "true"}, {}])
+def test_hx_request_manually(headers: dict):
+    assert "Handling `HX-Request` manually" in test_cases.keys()
+    create_test_files(test_cases["Handling `HX-Request` manually"])
+
+    from my_app.api_with_hx_request import app  # type: ignore
+
+    client = TestClient(app)
+
+    response = client.get("/email/123", headers=headers)
+    assert response.status_code == 200
+    assert "<p>123</p>" in response.text
+
+
+def test_filters():
+    assert "Filters" in test_cases.keys()
+    create_test_files(test_cases["Filters"])
+
+    from fastapi_htmx.htmx import templates_path
+
+    assert templates_path.env.loader.searchpath == [str(Path("my_app") / "templates")]
+
+
+@pytest.mark.parametrize(
+    "case_name",
+    ["Other template file extensions for SOME endpoints", "Other template file extensions for ALL endpoints"],
+)
+def test_template_extension_for_some_endpoints(case_name: str):
+    assert case_name in test_cases.keys()
+    create_test_files(test_cases[case_name])
+
+    from my_app.api_template_file_extension import app  # type: ignore
+
+    client = TestClient(app)
+
+    response = client.get("/customers", headers={"HX-Request": "true"})
+    assert response.status_code == 200
+    assert "<h1>Customer</h1>" in response.text
+
+
+@pytest.mark.parametrize(
+    "endpoint, expected_response_text",
+    [
+        ("/account", "<h1>My Account</h1>"),
+        ("/products", "<h1>Products</h1>"),
+    ],
+)
+def test_multiple_templates(endpoint: str, expected_response_text: str):
+    case_name = "Multiple Template Directories"
+    assert case_name in test_cases.keys()
+    create_test_files(test_cases[case_name])
+
+    from my_app.api_multiple_template_paths import app  # type: ignore
+
+    client = TestClient(app)
+
+    response = client.get(endpoint, headers={"HX-Request": "true"})
+    assert response.status_code == 200
+    assert expected_response_text in response.text

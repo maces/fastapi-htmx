@@ -7,8 +7,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.testclient import TestClient
 
+from fastapi_htmx import TemplateSpec as Tpl
 from fastapi_htmx import htmx, htmx_init
-from fastapi_htmx.htmx import MissingHTMXInitError
+from fastapi_htmx.htmx import InvalidHTMXInitError, MissingHTMXInitError
 
 
 def test_missing_request():
@@ -56,4 +57,20 @@ def test_missing_init():
     client = TestClient(app)
 
     with pytest.raises(MissingHTMXInitError):
+        client.get("/")
+
+
+def test_template_collection_not_found():
+    app = FastAPI()
+    htmx_init(templates={"wrong": Jinja2Templates(directory=Path("my_app") / "wrong" / "templates")})
+
+    @app.get("/", response_class=HTMLResponse)
+    @htmx(Tpl("correct", "index"), Tpl("correct", "index"))
+    async def root_page(request: Request):
+        await asyncio.sleep(0)
+        return {}
+
+    client = TestClient(app)
+
+    with pytest.raises(InvalidHTMXInitError):
         client.get("/")
