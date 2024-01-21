@@ -5,8 +5,9 @@ Extension for FastAPI to make HTMX easier to use.
 FastAPI-HTMX is an opinionated extension for FastAPI to speed up development of lightly interactive web applications. FastAPI-HTMX is implemented as a decorator, so it can be used on endpoints selectively. Furthermore it reduces boilerplate for Jinja2 template handling and allows for rapid prototyping by providing convenient helpers.
 
 [![Tests](https://github.com/maces/fastapi-htmx/actions/workflows/github-actions-tests.yml/badge.svg)](https://github.com/maces/fastapi-htmx/actions/workflows/github-actions-tests.yml)
-[![Version](https://img.shields.io/pypi/v/fastapi-htmx?logo=pypi&logoColor=white)](https://pypi.org/project/fastapi-htmx/)
-[![Experimental Support Chat](https://img.shields.io/badge/ChatGPT-Experimental_Support_Chat-white?logo=chatbot&labelColor=74aa9d)](https://chat.openai.com/g/g-FdDQll0CW-fastapihtmx)
+[![Version](https://img.shields.io/pypi/v/fastapi-htmx?logo=pypi&logoColor=white&color=2ab049)](https://pypi.org/project/fastapi-htmx/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/fastapi-htmx.svg?color=2ab049)](https://pypi.org/project/fastapi-htmx/)
+[![Experimental Support Chat](https://img.shields.io/badge/ChatGPT-Experimental_Support_Chat-white?logo=chatbot&color=2ab049)](https://chat.openai.com/g/g-FdDQll0CW-fastapihtmx)
 
 
 ## Install
