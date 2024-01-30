@@ -1,4 +1,5 @@
 """Extension for FastAPI to make HTMX easier to use."""
+
 import inspect
 import logging
 from collections.abc import Callable, Mapping
