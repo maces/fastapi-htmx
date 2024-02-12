@@ -109,6 +109,7 @@ def htmx(  # noqa: C901
 
     Returns:
         Callable: The decorated function.
+
     """  # noqa: D401
 
     def htmx_decorator(func):  # noqa: C901
@@ -182,6 +183,7 @@ def htmx_init(templates: TemplatePath, file_extension: str = "jinja2"):
         templates (TemplatePath): The configured template instance to use.
                                   Or multiple template collections distinguished by a key.
         file_extension: (str): The file extension to use for all templates. Can be individually overriden.
+
     """
     global templates_path
     templates_path = templates
