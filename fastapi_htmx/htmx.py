@@ -7,9 +7,8 @@ from dataclasses import dataclass
 from functools import wraps
 from typing import Dict, Optional, Union
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 from fastapi.templating import Jinja2Templates
-from starlette.requests import Request
 
 TemplatePath = Union[Jinja2Templates, Dict[str, Jinja2Templates]]
 TemplateName = str
