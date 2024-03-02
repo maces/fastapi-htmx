@@ -32,6 +32,6 @@ jobs:
       - name: install test dependencies
         run: poetry install --only dev
       - name: install main dependencies from matrix
-        run: poetry add fastapi==${{ matrix.fastapi-version }} jinja2==${{ matrix.jinja2-version }}
+        run: poetry add fastapi[all]==${{ matrix.fastapi-version }} jinja2==${{ matrix.jinja2-version }}
       - name: run tests
         run: poetry run pytest -v --cov-report term --cov=fastapi_htmx
