@@ -39,7 +39,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi_htmx import htmx, htmx_init
 
 app = FastAPI()
-htmx_init(templates=Jinja2Templates(directory=Path("my_app") / "templates"))
+htmx_init(templates=Jinja2Templates(directory=Path("templates")))
 
 @app.get("/", response_class=HTMLResponse)
 @htmx("index", "index")
