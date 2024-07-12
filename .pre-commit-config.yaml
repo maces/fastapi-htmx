@@ -32,6 +32,6 @@ repos:
         types: [python]
       - id: ruff
         name: ruff
-        entry: poetry run ruff
+        entry: poetry run ruff check
         language: system
         types: [python]
