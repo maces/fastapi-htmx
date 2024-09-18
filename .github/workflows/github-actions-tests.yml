@@ -1,4 +1,4 @@
-name: Tests
+    name: Tests
 on: [ pull_request ]
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [ 3.8, 3.9, "3.10", 3.11, 3.12 ]
-        fastapi-version: [ 0.94, 0.109, "0.111.1" ]
+        fastapi-version: [ 0.94, 0.109, "0.115.0" ]
         jinja2-version: [ 3.1.4 ]
     runs-on: ubuntu-latest
     steps:
