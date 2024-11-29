@@ -159,13 +159,13 @@ def htmx(  # noqa: C901
                 )
 
             template = _get_template_name(name=template_name, file_extension=template_extension)
-            return template.collection.TemplateResponse(
-                template.file_name,
-                {
-                    "request": request,
-                    **response,
-                },
-            )
+            system_fields = ('status_code', 'headers', 'media_type', 'background')
+            return template.collection.TemplateResponse(**{
+                    'request': request,
+                    'name': template.file_name,
+                    'context': {k: v for k, v in response.items() if k not in system_fields},
+                    **{k: v for k, v in response.items() if k in system_fields},
+            })
 
         return wrapper
 
