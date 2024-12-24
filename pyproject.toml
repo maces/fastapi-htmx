@@ -15,11 +15,11 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: OS Independent",
     "Topic :: Software Development :: Libraries",
     "Environment :: Web Environment",
@@ -39,7 +39,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 fastapi = ">=0.110.3,<0.116"
 jinja2 = "^3.1"
 
@@ -59,14 +59,14 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 120
-target-version = ['py38']
+target-version = ['py39']
 
 [tool.isort]
 profile = "black"
 
 [tool.ruff]
 line-length = 120
-target-version = "py38"
+target-version = "py39"
 select = [
     # Pyflakes
     "F",

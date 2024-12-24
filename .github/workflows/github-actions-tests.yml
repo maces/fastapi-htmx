@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12" ]
+        python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13" ]
         fastapi-version: [ "0.110.3", "0.114", "0.115.0" ]
         jinja2-version: [ "3.1.4" ]
     runs-on: ubuntu-latest

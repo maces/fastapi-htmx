@@ -5,12 +5,12 @@ import logging
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from functools import wraps
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 
 from fastapi import HTTPException, Request
 from fastapi.templating import Jinja2Templates
 
-TemplatePath = Union[Jinja2Templates, Dict[str, Jinja2Templates]]
+TemplatePath = Union[Jinja2Templates, dict[str, Jinja2Templates]]
 TemplateName = str
 templates_path: Optional[TemplatePath] = None
 templates_file_extension: Optional[str] = None
