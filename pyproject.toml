@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi-htmx"
-version = "0.4.4"
+version = "0.5.0"
 description = "Extension for FastAPI to make HTMX easier to use."
 authors = ["maces <fastapi-htmx@mzip.de>"]
 license = "LGPL"
